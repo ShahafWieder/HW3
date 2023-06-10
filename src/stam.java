@@ -3,12 +3,11 @@ import java.util.Iterator;
 
 public class ArrayStack<E extends Cloneable> implements Stack<E> {
     private E[] elements;
-    private int size;
+    private int INDEX = 0; // Index for the head of the Array stack
     private int capacity;
 
     public ArrayStack(int capacity) {
         elements = (E[]) new Object[capacity];
-        size = this.elements.length;
     }
 
     @Override

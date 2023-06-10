@@ -37,7 +37,7 @@ class MyCloneable implements Cloneable {
 public class Main {
     public static void main(String[] args) {
         testPartA();
-       // testPartB();
+        //testPartB();
     }
 
     /**
@@ -271,8 +271,8 @@ public class Main {
         checkScans(playlist3, artists, durations);
 
         System.out.println("\nTesting of part B is over!");
-    }*/
-
+    }
+*/
     /**
      * Checks numerous scans for a given playlist.
      */
@@ -308,5 +308,4 @@ public class Main {
 
         System.out.println("Done all scanning.");
     }*/
-
 }

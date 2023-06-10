@@ -186,6 +186,36 @@ Is playlist1 equal to playlist3? true
 
 Number of playlists in set: 1
 Starts scanning...
+Unicorn, Noa Kirel, POP, 2:51
+-----------------------------------
+Easter Egg, Dvir ft. Gal, HIP_HOP, 7:17
+-----------------------------------
+Take Five, Dave Brubeck, JAZZ, 2:55
+-----------------------------------
+Born In The U.S.A., Bruce Springsteen, ROCK, 4:38
+-----------------------------------
+I Walk the Line, Johnny Cash, COUNTRY, 2:46
+-----------------------------------
+Shape of You, Ed Sheeran, POP, 3:54
+-----------------------------------
+Y.M.C.A., Village People, DISCO, 3:19
+-----------------------------------
+Dancing Queen, ABBA, DISCO, 3:51
+-----------------------------------
+Le Freak, Chic, DISCO, 5:07
+-----------------------------------
+Counting Stars, OneRepublic, POP, 4:17
+-----------------------------------
+Shape of My Heart, Backstreet Boys, POP, 3:50
+-----------------------------------
+Another Easter Egg, Ahmed Jabara, ROCK, 3:47
+-----------------------------------
+Mamma Mia, ABBA, POP, 3:33
+-----------------------------------
+Waterloo, ABBA, POP, 2:42
+-----------------------------------
+Take a Chance on Me, ABBA, POP, 4:20
+-----------------------------------
 After initial scanning
 
 Starting scan number 1 [POP, -10, ABBA, ADDING]
@@ -890,19 +920,19 @@ After scan number 210.
 Starting scan number 211 [DISCO, 900, null, ADDING]
 Y.M.C.A., Village People, DISCO, 3:19
 Dancing Queen, ABBA, DISCO, 3:51
-Le Freak, Chic, DISCO, 5:7
+Le Freak, Chic, DISCO, 5:07
 After scan number 211.
 
 Starting scan number 212 [DISCO, 900, null, NAME]
 Dancing Queen, ABBA, DISCO, 3:51
-Le Freak, Chic, DISCO, 5:7
+Le Freak, Chic, DISCO, 5:07
 Y.M.C.A., Village People, DISCO, 3:19
 After scan number 212.
 
 Starting scan number 213 [DISCO, 900, null, DURATION]
 Y.M.C.A., Village People, DISCO, 3:19
 Dancing Queen, ABBA, DISCO, 3:51
-Le Freak, Chic, DISCO, 5:7
+Le Freak, Chic, DISCO, 5:07
 After scan number 213.
 
 Starting scan number 214 [DISCO, 900, Backstreet Boys, ADDING]
@@ -916,6 +946,14 @@ After scan number 216.
 
 Done all scanning.
 Starts scanning...
+Born In The U.S.A., Bruce Springsteen, ROCK, 4:38
+-----------------------------------
+Easter Egg, Dvir ft. Gal, HIP_HOP, 7:17
+-----------------------------------
+Unicorn, Noa Kirel, POP, 2:51
+-----------------------------------
+Take Five, Dave Brubeck, JAZZ, 2:55
+-----------------------------------
 After initial scanning
 
 Starting scan number 1 [POP, -10, ABBA, ADDING]
