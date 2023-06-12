@@ -67,7 +67,7 @@ public class Song implements Cloneable{
     public boolean equals(Object o){
         if(o instanceof Song){
             Song s=(Song) o;
-            if(this.name.equals(s.name) && this.artist.equals(s.artist) && this.genre.equals(s.genre)) {
+            if (this.name.equals(s.name) && this.artist.equals(s.artist) && Objects.equals(this.genre, s.genre) && this.hashCode()==s.hashCode()) {
                 return true;
             }
         }
@@ -76,7 +76,10 @@ public class Song implements Cloneable{
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, artist);
+        int result = 17;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (artist != null ? artist.hashCode() : 0);
+        return result;
     }
 
     public enum Genre {

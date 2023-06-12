@@ -1,27 +1,28 @@
 import java.util.ArrayList ;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
 public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIterable{
-    private ArrayList <Song> songs;
+    private ArrayList <Song> playList;
 
     public Playlist() {
-        songs = new ArrayList<>();
+        playList = new ArrayList<>();
     }
     public void addSong(Song song) {
-        for (Song existingSong : songs) {
+        for (Song existingSong : playList) {
             if (existingSong.getName().equals(song.getName()) && existingSong.getArtist().equals(song.getArtist())) {
                 throw new SongAlreadyExistsException("SongAlreadyExistsException");
             }
         }
-        songs.add(song);
+        playList.add(song);
     }
 
 
     public boolean removeSong(Song song) {
-        for(int i = 0; i< songs.size(); i++) {
-            if(songs.get(i).getName().equals(song.getName()) && songs.get(i).getArtist().equals(song.getArtist())) {
-                songs.remove(i);
+        for(int i = 0; i< playList.size(); i++) {
+            if(playList.get(i).getName().equals(song.getName()) && playList.get(i).getArtist().equals(song.getArtist())) {
+                playList.remove(i);
                 return true;
             }
         }
@@ -30,11 +31,11 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
     @Override
     public String toString() {
         StringBuilder strBuilder = new StringBuilder("[");
-        for (int i = 0; i < songs.size(); i++) {
+        for (int i = 0; i < playList.size(); i++) {
             if (i > 0) {
                 strBuilder.append(", ");
             }
-            strBuilder.append("(").append(songs.get(i).toString()).append(")");
+            strBuilder.append("(").append(playList.get(i).toString()).append(")");
         }
         strBuilder.append("]");
         return strBuilder.toString();
@@ -44,9 +45,9 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
     public Playlist clone() {
         try {
             Playlist clonedPlaylist = (Playlist) super.clone();
-            clonedPlaylist.songs = new ArrayList<>();
-            for(int i = 0; i< songs.size(); i++) {
-                clonedPlaylist.songs.add(songs.get(i).clone());
+            clonedPlaylist.playList = new ArrayList<>();
+            for(int i = 0; i< playList.size(); i++) {
+                clonedPlaylist.playList.add(playList.get(i).clone());
             }
             return clonedPlaylist;
         } catch (CloneNotSupportedException e) {
@@ -55,33 +56,39 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
     }
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Playlist) {
-            Playlist p = (Playlist) o;
-            if (this.songs.size() == p.songs.size()) {
-                for (int i = 0; i < songs.size(); i++) {
-                    int flag  = 0;
-                    for (int j = 0; j < songs.size(); j++) {//checks if the song in the i place is in the other playlist
-                        if (this.songs.get(i).equals(p.songs.get(j))) {
-                            flag =1;
-                        }
-                    }
-                    if(flag==0){return  false;}// is the song in both playlists?
-                }
-                 return true;
-            }
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Playlist)) {
             return false;
         }
-        return false;
+        Playlist other = (Playlist) o;
+        if (this.playList.size() != other.playList.size()) {
+            return false;
+        }
+
+        // Sort both playlists before comparing
+        ArrayList<Song> sortedThis = new ArrayList<>(this.playList);
+        ArrayList<Song> sortedOther = new ArrayList<>(other.playList);
+        Collections.sort(sortedThis, Comparator.comparing(Song::getName));
+        Collections.sort(sortedOther, Comparator.comparing(Song::getName));
+
+        // Compare each song in the sorted playlists
+        for (int i = 0; i < sortedThis.size(); i++) {
+            if (!sortedThis.get(i).equals(sortedOther.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int hash = 17;
-        for(int i = 0; i< songs.size(); i++) {
-            hash = 31 * hash + songs.hashCode();
-        }
-        return hash;
+        ArrayList<Song> sortedSongs = new ArrayList<>(playList);
+        Collections.sort(sortedSongs, Comparator.comparing(Song::getName));
+        return sortedSongs.hashCode();
     }
+
     public Iterator<Song> iterator() {
         return new PlaylistIterator();
     }
@@ -91,12 +98,12 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
             private int currentIndex = 0;
             @Override
             public boolean hasNext() {
-                return currentIndex < songs.size() && songs.get(currentIndex) != null;
+                return currentIndex < playList.size() && playList.get(currentIndex) != null;
             }
             @Override
             public Song next() {
                 if(hasNext()) {
-                    return songs.get(currentIndex++);
+                    return playList.get(currentIndex++);
                 }
                 else{
                     throw new UnsupportedOperationException();
@@ -105,36 +112,36 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
         }
 
     public void filterArtist(String artist) {
-        ArrayList<Song> filteredSongs = new ArrayList<>();
-        for (Song song : songs) {
+        ArrayList <Song> filteredSongs = new ArrayList<>();
+        for (Song song : playList) {
             Song clonedSong = song.clone(); // Create a deep copy of the song using the clone() method
             if (clonedSong.getArtist().equals(artist)) {
                 filteredSongs.add(clonedSong);
             }
         }
-        songs = filteredSongs; // Replace the original songs list with the filtered list
+        playList = filteredSongs; // Replace the original songs list with the filtered list
     }
 
     public void filterGenre(Song.Genre genre) {
         ArrayList<Song> filteredSongs = new ArrayList<>();
-        for (Song song : songs) {
+        for (Song song : playList) {
             Song clonedSong = song.clone(); // Create a deep copy of the song using the clone() method
             if (clonedSong.getGenre().equals(genre)) {
                 filteredSongs.add(clonedSong);
             }
         }
-        songs = filteredSongs; // Replace the original songs list with the filtered list
+        playList = filteredSongs; // Replace the original songs list with the filtered list
     }
 
     public void filterDuration(int duration) {
         ArrayList<Song> filteredSongs = new ArrayList<>();
-        for (Song song : songs) {
+        for (Song song : playList) {
             Song clonedSong = song.clone(); // Create a deep copy of the song using the clone() method
             if (clonedSong.getDuration() <= duration) {
                 filteredSongs.add(clonedSong);
             }
         }
-        songs = filteredSongs; // Replace the original songs list with the filtered list
+        playList = filteredSongs; // Replace the original songs list with the filtered list
     }
 
 
@@ -145,9 +152,9 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
             // No need to change the order, as songs are added randomly
             return;
         } else if (order == ScanningOrder.NAME) {
-            songs.sort(Comparator.comparing(Song::getName));
+            playList.sort(Comparator.comparing(Song::getName));
         } else if (order == ScanningOrder.DURATION) {
-            songs.sort(Comparator.comparingInt(Song::getDuration));
+            playList.sort(Comparator.comparingInt(Song::getDuration));
         }
     }
 
