@@ -2,8 +2,6 @@ import java.util.Objects;
 public class Song implements Cloneable{
     private  String name;
     private  String artist;
-
-
     private  Genre genre;
     private  int duration;
 
@@ -47,7 +45,7 @@ public class Song implements Cloneable{
 
     @Override
     public String toString(){
-        return "("+this.name+", "+this.artist+", "+this.genre+", "+this.getTime()+")";
+        return this.name+", "+this.artist+", "+this.genre+", "+this.getTime();
     }
 
     @Override

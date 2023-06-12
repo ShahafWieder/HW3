@@ -1,4 +1,6 @@
 import java.util.ArrayList ;
+import java.util.Comparator;
+import java.util.Iterator;
 
 public class Playlist implements Cloneable {
     private ArrayList <Song> songs;
@@ -7,16 +9,14 @@ public class Playlist implements Cloneable {
         songs = new ArrayList<>();
     }
     public void addSong(Song song) {
-        for(int i = 0; i< songs.size(); i++) {
-            if(songs.get(i).getName().equals(song.getName()) && songs.get(i).getArtist().equals(song.getArtist())) {
+        for (Song existingSong : songs) {
+            if (existingSong.getName().equals(song.getName()) && existingSong.getArtist().equals(song.getArtist())) {
                 throw new SongAlreadyExistsException("SongAlreadyExistsException");
-            }
-            else{
-                songs.add(song);
             }
         }
         songs.add(song);
     }
+
 
     public boolean removeSong(Song song) {
         for(int i = 0; i< songs.size(); i++) {
@@ -29,13 +29,17 @@ public class Playlist implements Cloneable {
     }
     @Override
     public String toString() {
-        String str = "[";
-        for(int i = 0; i< songs.size(); i++) {
-            str += songs.get(i).toString() + ",";
+        StringBuilder strBuilder = new StringBuilder("[");
+        for (int i = 0; i < songs.size(); i++) {
+            if (i > 0) {
+                strBuilder.append(", ");
+            }
+            strBuilder.append("(").append(songs.get(i).toString()).append(")");
         }
-        str += "]";
-        return str;
+        strBuilder.append("]");
+        return strBuilder.toString();
     }
+
 
     public Playlist clone() {
         try {
@@ -78,4 +82,73 @@ public class Playlist implements Cloneable {
         }
         return hash;
     }
+    public Iterator<Song> iterator() {
+        return new PlaylistIterator();
+    }
+
+
+    class PlaylistIterator implements Iterator<Song>{
+            private int currentIndex = 0;
+            @Override
+            public boolean hasNext() {
+                return currentIndex < songs.size() && songs.get(currentIndex) != null;
+            }
+            @Override
+            public Song next() {
+                if(hasNext()) {
+                    return songs.get(currentIndex++);
+                }
+                else{
+                    throw new UnsupportedOperationException();
+                }
+            }
+        }
+
+    public void filterArtist(String artist) {
+        ArrayList<Song> filteredSongs = new ArrayList<>();
+        for (Song song : songs) {
+            Song clonedSong = song.clone(); // Create a deep copy of the song using the clone() method
+            if (clonedSong.getArtist().equals(artist)) {
+                filteredSongs.add(clonedSong);
+            }
+        }
+        songs = filteredSongs; // Replace the original songs list with the filtered list
+    }
+
+    public void filterGenre(Song.Genre genre) {
+        ArrayList<Song> filteredSongs = new ArrayList<>();
+        for (Song song : songs) {
+            Song clonedSong = song.clone(); // Create a deep copy of the song using the clone() method
+            if (clonedSong.getGenre().equals(genre)) {
+                filteredSongs.add(clonedSong);
+            }
+        }
+        songs = filteredSongs; // Replace the original songs list with the filtered list
+    }
+
+    public void filterDuration(int duration) {
+        ArrayList<Song> filteredSongs = new ArrayList<>();
+        for (Song song : songs) {
+            Song clonedSong = song.clone(); // Create a deep copy of the song using the clone() method
+            if (clonedSong.getDuration() <= duration) {
+                filteredSongs.add(clonedSong);
+            }
+        }
+        songs = filteredSongs; // Replace the original songs list with the filtered list
+    }
+
+
+
+    @Override
+    public void setScanningOrder(ScanningOrder order) {
+        if (order == ScanningOrder.ADDING) {
+            // No need to change the order, as songs are added randomly
+            return;
+        } else if (order == ScanningOrder.NAME) {
+            songs.sort(Comparator.comparing(Song::getName));
+        } else if (order == ScanningOrder.DURATION) {
+            songs.sort(Comparator.comparingInt(Song::getDuration));
+        }
+    }
+
 }
