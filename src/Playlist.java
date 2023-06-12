@@ -2,7 +2,7 @@ import java.util.ArrayList ;
 import java.util.Comparator;
 import java.util.Iterator;
 
-public class Playlist implements Cloneable {
+public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIterable{
     private ArrayList <Song> songs;
 
     public Playlist() {
