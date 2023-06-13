@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIterable{
     private ArrayList <Song> playList;
-
+    private ArrayList <Song> filteredSongs;
     public Playlist() {
         playList = new ArrayList<>();
     }
@@ -16,6 +16,7 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
             }
         }
         playList.add(song);
+        filteredSongs.add(song);
     }
 
 
@@ -23,6 +24,7 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
         for(int i = 0; i< playList.size(); i++) {
             if(playList.get(i).getName().equals(song.getName()) && playList.get(i).getArtist().equals(song.getArtist())) {
                 playList.remove(i);
+                filteredSongs.remove(i);
                 return true;
             }
         }
@@ -98,12 +100,18 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
             private int currentIndex = 0;
             @Override
             public boolean hasNext() {
-                return currentIndex < playList.size() && playList.get(currentIndex) != null;
+                if(currentIndex < filteredSongs.size() &&filteredSongs.get(currentIndex) != null){
+                    return true;
+                }
+                else{
+                    filteredSongs = (ArrayList<Song>) playList.clone();
+                    return false;
+                }
             }
             @Override
             public Song next() {
                 if(hasNext()) {
-                    return playList.get(currentIndex++);
+                    return filteredSongs.get(currentIndex++);
                 }
                 else{
                     throw new UnsupportedOperationException();
@@ -111,51 +119,61 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
             }
         }
 
-    public void filterArtist(String artist) {
-        ArrayList <Song> filteredSongs = new ArrayList<>();
-        for (Song song : playList) {
-            Song clonedSong = song.clone(); // Create a deep copy of the song using the clone() method
-            if (clonedSong.getArtist().equals(artist)) {
-                filteredSongs.add(clonedSong);
-            }
-        }
-        playList = filteredSongs; // Replace the original songs list with the filtered list
-    }
-
-    public void filterGenre(Song.Genre genre) {
-        ArrayList<Song> filteredSongs = new ArrayList<>();
-        for (Song song : playList) {
-            Song clonedSong = song.clone(); // Create a deep copy of the song using the clone() method
-            if (clonedSong.getGenre().equals(genre)) {
-                filteredSongs.add(clonedSong);
-            }
-        }
-        playList = filteredSongs; // Replace the original songs list with the filtered list
-    }
-
-    public void filterDuration(int duration) {
-        ArrayList<Song> filteredSongs = new ArrayList<>();
-        for (Song song : playList) {
-            Song clonedSong = song.clone(); // Create a deep copy of the song using the clone() method
-            if (clonedSong.getDuration() <= duration) {
-                filteredSongs.add(clonedSong);
-            }
-        }
-        playList = filteredSongs; // Replace the original songs list with the filtered list
-    }
-
-
-
-    @Override
-    public void setScanningOrder(ScanningOrder order) {
-        if (order == ScanningOrder.ADDING) {
-            // No need to change the order, as songs are added randomly
+        public void filterArtist(String artist){
+        if(artist == null){
             return;
-        } else if (order == ScanningOrder.NAME) {
-            playList.sort(Comparator.comparing(Song::getName));
-        } else if (order == ScanningOrder.DURATION) {
-            playList.sort(Comparator.comparingInt(Song::getDuration));
         }
-    }
+        else {
+            int i = 0;
+            while (i < filteredSongs.size()) {
+                if (!filteredSongs.get(i).getArtist().equals(artist)) {
+                    filteredSongs.remove(filteredSongs.get(i));
+                } else {
+                    i++;
+                }
+            }
+        }
+        }
+
+        public void filterGenre(Song.Genre genre){
+        if(genre == null){
+            return;
+        }
+        else {
+            int i = 0;
+            while (i < filteredSongs.size()) {
+                if (!filteredSongs.get(i).getGenre().equals(genre)) {
+                    filteredSongs.remove(filteredSongs.get(i));
+                } else {
+                    i++;
+                }
+            }
+        }
+        }
+
+        public void filterDuration(int duration){
+            int i = 0;
+            while (i < filteredSongs.size()) {
+                if (!(filteredSongs.get(i).getDuration() <= duration)) {
+                    filteredSongs.remove(filteredSongs.get(i));
+                } else {
+                    i++;
+                }
+            }
+        }
+
+        public void setScanningOrder(ScanningOrder order){
+            if(order.equals(ScanningOrder.ADDING)){
+                return;
+            }
+            else if(order.equals(ScanningOrder.NAME)){
+                Collections.sort(filteredSongs, Comparator.comparing(Song::getName).thenComparing(Song::getArtist));//: thenComparing.Song::artist
+            }
+            else if(order.equals(ScanningOrder.DURATION)){
+                Collections.sort(filteredSongs, Comparator.comparing(Song::getDuration).thenComparing(Song::getName).thenComparing(Song::getArtist));
+            }
+
+
+        }
 
 }
