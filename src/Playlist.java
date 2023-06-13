@@ -8,6 +8,7 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
     private ArrayList <Song> filteredSongs;
     public Playlist() {
         playList = new ArrayList<>();
+        filteredSongs=(ArrayList<Song>) playList.clone();
     }
     public void addSong(Song song) {
         for (Song existingSong : playList) {
