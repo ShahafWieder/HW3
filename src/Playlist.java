@@ -3,13 +3,28 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
+/**
+ * The Playlist class represents a collection of songs.
+ * It implements the Cloneable, FilteredSongIterable, and OrderedSongIterable interfaces.
+ */
 public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIterable{
     private ArrayList <Song> playList;
     private ArrayList <Song> filteredSongs;
+    /**
+     * Constructs a new Playlist object.
+     * Initializes the internal playlist and filtered songs list.
+     */
     public Playlist() {
         playList = new ArrayList<>();
         filteredSongs=(ArrayList<Song>) playList.clone();
     }
+    /**
+     * Adds a song to the playlist.
+     * Throws a SongAlreadyExistsException if the song already exists in the playlist.
+     *
+     * @param song the song to add
+     * @throws SongAlreadyExistsException if the song already exists in the playlist
+     */
     public void addSong(Song song) {
         for (Song existingSong : playList) {
             if (existingSong.getName().equals(song.getName()) && existingSong.getArtist().equals(song.getArtist())) {
@@ -21,6 +36,12 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
     }
 
 
+    /**
+     * Removes a song from the playlist.
+     *
+     * @param song the song to remove
+     * @return true if the song was found and removed, false otherwise
+     */
     public boolean removeSong(Song song) {
         for(int i = 0; i< playList.size(); i++) {
             if(playList.get(i).getName().equals(song.getName()) && playList.get(i).getArtist().equals(song.getArtist())) {
@@ -31,6 +52,11 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
         }
         return false;
     }
+    /**
+     * Returns the string representation of the playlist.
+     *
+     * @return the string representation of the playlist
+     */
     @Override
     public String toString() {
         StringBuilder strBuilder = new StringBuilder("[");
@@ -45,6 +71,11 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
     }
 
 
+    /**
+     * Creates and returns a deep copy of the Playlist object.
+     *
+     * @return a clone of the Playlist object
+     */
     public Playlist clone() {
         try {
             Playlist clonedPlaylist = (Playlist) super.clone();
@@ -57,6 +88,13 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
             return null;
         }
     }
+    /**
+     * Checks if the Playlist object is equal to another object.
+     * Two Playlist objects are considered equal if they have the same songs in the same order.
+     *
+     * @param o the object to compare
+     * @return true if the objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (o == this) {
@@ -85,6 +123,12 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
         return true;
     }
 
+    /**
+     * Returns the hash code of the Playlist object.
+     * The hash code is calculated based on the sorted list of songs.
+     *
+     * @return the hash code of the Playlist object
+     */
     @Override
     public int hashCode() {
         ArrayList<Song> sortedSongs = new ArrayList<>(playList);
@@ -92,13 +136,26 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
         return sortedSongs.hashCode();
     }
 
+    /**
+     * Returns an iterator over the filtered songs in the playlist.
+     *
+     * @return an iterator over the filtered songs in the playlist
+     */
     public Iterator<Song> iterator() {
         return new PlaylistIterator();
     }
 
 
+    /**
+     * Implements the Iterator interface for iterating over the filtered songs in the playlist.
+     */
     class PlaylistIterator implements Iterator<Song>{
             private int currentIndex = 0;
+        /**
+         * Checks if there are more songs in the playlist.
+         *
+         * @return true if there are more songs, false otherwise
+         */
             @Override
             public boolean hasNext() {
                 if(currentIndex < filteredSongs.size() &&filteredSongs.get(currentIndex) != null){
@@ -109,6 +166,12 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
                     return false;
                 }
             }
+        /**
+         * Returns the next song in the playlist.
+         *
+         * @return the next song in the playlist
+         * @throws UnsupportedOperationException if there are no more songs
+         */
             @Override
             public Song next() {
                 if(hasNext()) {
@@ -120,6 +183,11 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
             }
         }
 
+    /**
+     * Filters the songs in the playlist by the given artist.
+     *
+     * @param artist the artist to filter by
+     */
         public void filterArtist(String artist){
         if(artist == null){
             return;
@@ -136,6 +204,11 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
         }
         }
 
+    /**
+     * Filters the songs in the playlist by the given genre.
+     *
+     * @param genre the genre to filter by
+     */
         public void filterGenre(Song.Genre genre){
         if(genre == null){
             return;
@@ -152,6 +225,11 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
         }
         }
 
+    /**
+     * Filters the songs in the playlist by the given duration.
+     *
+     * @param duration the duration to filter by
+     */
         public void filterDuration(int duration){
             int i = 0;
             while (i < filteredSongs.size()) {
@@ -163,6 +241,11 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
             }
         }
 
+    /**
+     * Sets the scanning order for iterating over the playlist.
+     *
+     * @param order the scanning order
+     */
         public void setScanningOrder(ScanningOrder order){
             if(order.equals(ScanningOrder.ADDING)){
                 return;
