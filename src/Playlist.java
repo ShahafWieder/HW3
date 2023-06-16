@@ -251,7 +251,7 @@ public class Playlist implements Cloneable, FilteredSongIterable, OrderedSongIte
                 return;
             }
             else if(order.equals(ScanningOrder.NAME)){
-                Collections.sort(filteredSongs, Comparator.comparing(Song::getName).thenComparing(Song::getArtist));//: thenComparing.Song::artist
+                Collections.sort(filteredSongs, Comparator.comparing(Song::getName).thenComparing(Song::getArtist));
             }
             else if(order.equals(ScanningOrder.DURATION)){
                 Collections.sort(filteredSongs, Comparator.comparing(Song::getDuration).thenComparing(Song::getName).thenComparing(Song::getArtist));
