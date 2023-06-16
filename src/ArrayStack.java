@@ -1,6 +1,6 @@
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
-
 /**
  * The ArrayStack class implements the Stack interface using an array-based implementation.
  *
@@ -93,9 +93,9 @@ public class ArrayStack<E extends Cloneable> implements Stack<E>, Iterable<E>, C
     }
 
     /**
-     * Creates and returns a shallow copy of this stack.
+     * Creates and returns a deep copy of this stack.
      *
-     * @return a shallow copy of this stack
+     * @return a deep copy of this stack
      */
     @Override
     public ArrayStack<E> clone() {
@@ -108,9 +108,10 @@ public class ArrayStack<E extends Cloneable> implements Stack<E>, Iterable<E>, C
         clone.elements = new Object[this.capacity];
         for (int i = 0; i <= this.INDEX; i++) {
             try {
-                Method method = this.elements[i].getClass().getMethod("clone");
-                clone.elements[i] = ((Method) method).invoke(this.elements[i]);
-            } catch (Exception e) {
+                Method cloneMethod = this.elements[i].getClass().getMethod("clone");
+                Object clonedElement = cloneMethod.invoke(this.elements[i]);
+                clone.elements[i] = clonedElement;
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 return null;
             }
         }
